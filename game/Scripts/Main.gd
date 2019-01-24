@@ -4,6 +4,27 @@ export (PackedScene) var Rock
 
 var screensize
 
+var level = 0
+var score = 0
+var playing = false
+
+func new_game():
+	for rock in $Rocks.get_children():
+		rock.queue_free()
+	level = 0
+	score = 0
+	$HUD.update_score(score)
+	$Player.start()
+	$HUD.show_message("Get Ready!")
+	yield($HUD/MessageTimer, "timeout")
+	playing = true
+	new_level()
+
+func new_level():
+	level += 1
+	$HUD.show_message("Wave %s" % level)
+	for i in range(level):
+		spawn_rock(3)
 
 
 func _ready():
@@ -13,10 +34,9 @@ func _ready():
 	for i in range(3):
 		spawn_rock(3)
 
-#func _process(delta):
-#	# Called every frame. Delta is time since last frame.
-#	# Update game logic here.
-#	pass
+func _process(delta):
+	if playing and $Rocks.get_child_count() == 0:
+		new_level()
 
 func spawn_rock(size, pos = null, vel = null):
 	if !pos:
@@ -29,8 +49,26 @@ func spawn_rock(size, pos = null, vel = null):
 	r.screensize = screensize
 	r.start(pos, vel, size)
 	$Rocks.add_child(r)
-
+	
+	# manually connect the signal from Rock to Main
+	r.connect('exploded', self, '_on_Rock_exploded')
+	
+	
 func _on_Player_shoot(bullet, pos, dir):
 	var bull = bullet.instance()
 	bull.start(pos, dir)
 	add_child(bull)
+
+func _on_Rock_exploded(size, radius, pos, vel):
+	#create 2 new smaller rocks tangent to previous rock in two directions 
+	if size <=1:
+		return
+	for offset in [-1, 1]:								#znajdz wektor prostopadly
+		var dir = (pos - $Player.position).normalized().tangent() * offset
+		var newpos = pos + dir * radius
+		var newvel = dir * vel.length() * 1.1
+		spawn_rock(size - 1, newpos, newvel) 
+
+func game_over():
+	playing = false
+	$HUD.game_over()

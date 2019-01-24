@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Scripts/Main.gd" type="Script" id=1]
 [ext_resource path="res://Scenes/Rock.tscn" type="PackedScene" id=2]
 [ext_resource path="res://assets/space_background.png" type="Texture" id=3]
 [ext_resource path="res://Scenes/Player.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Scenes/HUD.tscn" type="PackedScene" id=5]
 
 [sub_resource type="Curve2D" id=1]
 
@@ -12,7 +13,7 @@ _data = {
 "points": PoolVector2Array( 0, 0, 0, 0, 2.94849, 5.37689, 0, 0, 0, 0, 1016.82, 0.210297, 0, 0, 0, 0, 1018.88, 594.869, 0, 0, 0, 0, -2.29675, 592.818, 0, 0, 0, 0, 2.94849, 5.37689 )
 }
 
-[node name="Main" type="Node2D"]
+[node name="Main" type="Node2D" index="0"]
 
 script = ExtResource( 1 )
 Rock = ExtResource( 2 )
@@ -33,7 +34,7 @@ curve = SubResource( 1 )
 [node name="RockSpawn" type="PathFollow2D" parent="RockPath" index="0"]
 
 position = Vector2( 2.94849, 5.37689 )
-rotation = -0.0050958
+rotation = -0.00509582
 offset = 0.0
 h_offset = 0.0
 v_offset = 0.0
@@ -44,6 +45,12 @@ lookahead = 4.0
 
 [node name="Rocks" type="Node2D" parent="." index="3"]
 
+[node name="HUD" parent="." index="4" instance=ExtResource( 5 )]
+
+[connection signal="lives_changed" from="Player" to="HUD" method="update_lives"]
+
 [connection signal="shoot" from="Player" to="." method="_on_Player_shoot"]
+
+[connection signal="start_game" from="HUD" to="." method="new_game"]
 
 

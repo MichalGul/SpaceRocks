@@ -19,6 +19,11 @@ export (float) var fire_rate
 
 var can_shoot = true 
 
+signal lives_changed
+				#okreslenie funkcji ktora ma sie wywolywac gdy zmienna zmienia wartosc
+var lives = 0 setget set_lives
+
+
 #export (int) var speed = 100
 #var target = Vector2()
 #var velocity = Vector2()
@@ -38,13 +43,21 @@ var can_shoot = true
 #RIGIDBODY
 
 func _ready():
-	change_state(States.ALIVE)
+	change_state(States.INIT)
 	screensize = get_viewport().get_visible_rect().size
 	$GunTimer.wait_time = fire_rate
 
 func _process(delta):
 	get_input()
 
+func set_lives(value):
+	lives = value
+	emit_signal("lives_changed", lives)
+
+func start():
+	$Sprite.show()
+	self.lives = 3
+	change_state(States.ALIVE)
 
 func _integrate_forces(physics_state):
 	set_applied_force(thrust.rotated(rotation))

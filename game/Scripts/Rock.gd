@@ -5,7 +5,7 @@ var size
 var radius
 var scale_factor = 0.2 
 
-signal explode
+signal exploded
 
 func _ready():
 	# Called when the node is added to the scene for the first time.
