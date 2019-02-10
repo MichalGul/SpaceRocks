@@ -38,6 +38,23 @@ func _process(delta):
 	if playing and $Rocks.get_child_count() == 0:
 		new_level()
 
+#UZYC DO GRY
+func _input(event):
+	if event.is_action_pressed('pause'):
+		if not playing:
+			return
+		get_tree().paused = not get_tree().paused
+		if get_tree().paused:
+			$HUD/MessageLabel.text = "Paused"
+			$HUD/MessageLabel.show()
+		else:
+			$HUD/MessageLabel.text = ""
+			$HUD/MessageLabel.hide()
+
+
+
+
+
 func spawn_rock(size, pos = null, vel = null):
 	if !pos:
 		$RockPath/RockSpawn.set_offset(randi()) #get random pos on PathFollow2D

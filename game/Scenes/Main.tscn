@@ -13,9 +13,11 @@ _data = {
 "points": PoolVector2Array( 0, 0, 0, 0, 2.94849, 5.37689, 0, 0, 0, 0, 1016.82, 0.210297, 0, 0, 0, 0, 1018.88, 594.869, 0, 0, 0, 0, -2.29675, 592.818, 0, 0, 0, 0, 2.94849, 5.37689 )
 }
 
-[node name="Main" type="Node2D" index="0"]
+[node name="Main" type="Node2D"]
 
+pause_mode = 2
 script = ExtResource( 1 )
+_sections_unfolded = [ "Pause" ]
 Rock = ExtResource( 2 )
 
 [node name="Background" type="Sprite" parent="." index="0"]
@@ -25,6 +27,9 @@ offset = Vector2( 60, 60 )
 _sections_unfolded = [ "Offset" ]
 
 [node name="Player" parent="." index="1" instance=ExtResource( 4 )]
+
+pause_mode = 1
+_sections_unfolded = [ "Angular", "Linear", "Pause" ]
 
 [node name="RockPath" type="Path2D" parent="." index="2"]
 
@@ -45,7 +50,15 @@ lookahead = 4.0
 
 [node name="Rocks" type="Node2D" parent="." index="3"]
 
+pause_mode = 1
+_sections_unfolded = [ "Pause" ]
+
 [node name="HUD" parent="." index="4" instance=ExtResource( 5 )]
+
+pause_mode = 1
+_sections_unfolded = [ "Pause" ]
+
+[connection signal="dead" from="Player" to="." method="game_over"]
 
 [connection signal="lives_changed" from="Player" to="HUD" method="update_lives"]
 
